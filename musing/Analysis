@@ -1,4 +1,4 @@
 # Tutorial Backing repo depends on Production and Offline and it
 # contains REve and TrkAna.  Tutorial is built with this as a backing release.
 #
-v01_00_00   EventNtuple/v06_04_00 EventDisplay/v07_00_02 Tutorial/V01_00_00 backing/SimJob/MDC2020av
+v01_00_00   EventNtuple/v06_04_00 EventDisplay/v07_00_02 Tutorial/v01_00_00 backing/SimJob/MDC2020av
