@@ -1,0 +1,46 @@
+
+if [ "$MU2E_SPACK" ]; then
+
+   if [ "$(smack version)" == "2" ] ; then
+       smack setup ops-016
+       # repair because declad puts a rogue samweb_client in the path
+       #export PYTHONPATH=/cvmfs/mu2e.opensciencegrid.org/spackages/241207/spack/var/spack/environments/ops-015/.spack-env/view/python:$PYTHONPATH
+       export PYTHONPATH=$SPACK_ENV/.spack-env/view/python:$PYTHONPATH
+   else
+       if [ "$SPACK_ENV" ]; then
+           echo "An environment is already setup, please use a new process"
+           return 1
+       fi
+
+       spack load metacat/mkk22r2
+       spack load data-dispatcher/fx2qiuk
+       spack load rucio-clients/5iq2vsm
+       spack load ifdhc/poo3j5t
+       spack load ifdhc-config/n7nsz2u
+       spack load sam-web-client/bxofldr
+       spack load mdh/mo4oayj
+   fi
+
+   setup -B mu2egrid v8_03_02
+   setup -B mu2efiletools v5_1
+
+
+else
+
+   setup -B ifdhc v2_7_2
+   setup -B mu2egrid v8_03_02
+   setup -B mu2efiletools v5_1
+   setup -B mu2ejobtools v2_02_00
+
+   setup -B sam_web_client v3_6
+   setup -B mdh v01_05_00
+   if command -v mu2e > /dev/null ; then
+      setup mu2etools v4_05_00
+   fi
+
+fi
+
+# Local Variables:
+# mode: sh
+# End:
+# vi:syntax=sh
