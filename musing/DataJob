@@ -1,0 +1,4 @@
+# for data reconstruction and associated processing
+#
+# leave out for now: EventNtuple/v06_08_00 
+1.0.0 PassN/v00_00_01 DQM/v1.3.0 Production/v02_01_02 mu2e-trig-config/v7_07_00 backing/Offline/v13_00_03
