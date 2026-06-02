@@ -17,7 +17,7 @@ fi
 # use preferred compiler, if none requested
 #
 if [ -z "$MUSE_COMPILER_E" ]; then
-    export MUSE_COMPILER_E=e28
+    export MUSE_COMPILER_E=e29
     if [ $MUSE_VERBOSE -gt 0 ]; then
         echo "INFO - MUSE_COMPILER_E defaulting to $MUSE_COMPILER_E in $MUSE_ENVSET"
     fi
@@ -47,43 +47,14 @@ if [ "$MUSE_G4VIS" == "qt" ]; then
    GFLAGS=${GFLAGS}:+qt
 fi
 
-if [ ! "$MU2E_SPACK" ]; then
 
-    # build tools
-    setup cetmodules v3_22_02
-    setup -B  valgrind   v3_21_0
-
-    # art
-    # these three lines must be coordinated
-    setup -B art_root_io v1_13_03 -q${MUSE_BUILD}:+${MUSE_COMPILER_E}
-    export MUSE_ART=s128
-    setup -B  gallery   v1_22_03  -q+${MUSE_BUILD}:+${MUSE_COMPILER_E}
-    complete -F _art -o filenames -A file mu2e
-
-    setup -B geant4 v4_11_1_p02d -q${GFLAGS}
-
-    setup -B xerces_c v3_2_3e   -q +${MUSE_COMPILER_E}
-    setup -B artdaq_core_mu2e v2_01_03 -q +${MUSE_BUILD}:+${MUSE_COMPILER_E}:+${MUSE_ART}
-    setup -B BTrk v1_02_46  -q +${MUSE_BUILD}:+${MUSE_COMPILER_E}:+${MUSE_PYTHON}
-    setup -B KinKal v03_00_01 -q +${MUSE_BUILD}:+${MUSE_COMPILER_E}:+${MUSE_PYTHON}
-    setup -B cry   v1_7q  -q +${MUSE_BUILD}:+${MUSE_COMPILER_E}
-    setup -B gsl v2_7
-    setup curl v7_64_1
-    setup -B scons v4_4_0  -q +${MUSE_PYTHON}
-    setup -B gdb v13_1
-    setup -B swig
-
-    return
-
+if [ "$MUSE_COMPILER_E" != "e29" ]; then
+    echo "ERROR - compilier is $MUSE_COMPILER_E , only e29 is supported"
+    return 1
 fi
 
-#
-# spack implementation
-#
-
-
-if [ "$MUSE_COMPILER_E" != "e28" ]; then
-    echo "ERROR - compilier is $MUSE_COMPILER_E , only e28 is supported"
+if [ "$MUSE_FLAVOR" != "al9" ]; then
+    echo "ERROR - MUSE_FLAVOR is $MUSE_FLAVOR , only al9 is supported"
     return 1
 fi
 
@@ -95,18 +66,14 @@ MODE=view
 LDSAVE="$LD_LIBRARY_PATH"
 
 
-if [ "$MUSE_FLAVOR" == "sl7" ]; then
-    spack load scons/tgh74ii
-    spack env activate mu2e-3-14-03-sl7-e28-prof-1
-elif [ "$MUSE_FLAVOR" == "al9" ]; then
-#    spack load scons/s4ccopl
-    SMACKV=$(smack version)
-    if [ $SMACKV -eq 1 ]; then
-        spack env activate mu2e-3-14-03-al9-e28-prof-12
-    else
-        smack setup mu2e-3-14-03-al9-e28-prof-12
-    fi
+SMACKV=$(smack version)
+if [ $SMACKV -eq 1 ]; then
+    echo "old smack script is active, but requested env is outside the old install"
+    return 1
+else
+    smack setup muse-al9-prof-e29-p099
 fi
+
 # this doesn't work yet
 #complete -F _art -o filenames -A file mu2e
 
@@ -115,17 +82,17 @@ if [ $MUSE_VERBOSE -gt 0 ]; then
 fi
 
 PLIST=$(spack find -p --no-groups | \
-awk '{if(inst=="true") print $0; if($2=="Installed") inst="true";}' \
+awk '{if(inst=="true") print $0; if($2=="") inst="true";}' \
 | tr "@" " ")
 
 if [ "$MODE" == "view" ]; then
     # this should point to the default view
     MUSE_VIEW=$SPACK_ENV/.spack-env/view
     # this will be used in the link and RPATH
-    export MUSE_LIBRARY_PATH=${MUSE_LIBRARY_PATH:+$MUSE_LIBRARY_PATH:}$MUSE_VIEW/lib:$MUSE_VIEW/lib64:$MUSE_VIEW/lib/root
+    export MUSE_LIBRARY_PATH=${MUSE_LIBRARY_PATH:+$MUSE_LIBRARY_PATH:}$MUSE_VIEW/lib:$MUSE_VIEW/lib64:$MUSE_VIEW/tbb/2022.0/lib:$MUSE_VIEW/lib/root
     # this is also incomplete
     export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:$MUSE_VIEW/include/KinKal/General:$MUSE_VIEW/include/KinKal/Examples:$MUSE_VIEW/include/KinKal/Trajectory
-    export MUSE_VIEW_INC=$MUSE_VIEW/include:$MUSE_VIEW/inc:$MUSE_VIEW/include/root:$MUSE_VIEW/include/python3.9
+    export MUSE_VIEW_INC=$MUSE_VIEW/include:$MUSE_VIEW/inc:$MUSE_VIEW/include/root:$MUSE_VIEW/tbb/2022.0/include:$MUSE_VIEW/include/python3.10
     # we won't use the env library path directly, only via MUSE_LIBRARY_PATH
     LD_LIBRARY_PATH="$LDSAVE"
 else
@@ -133,9 +100,10 @@ else
     # it points to too many builtin libs via the link dir
     # so it will be managed below
     LD_LIBRARY_PATH="$LDSAVE"
+
 fi
 
-for PKGM in art art-root-io canvas cry curl btrk kinkal messagefacility fhicl-cpp hep-concurrency sqlite cetlib cetlib-except nlohmann-json boost clhep root openblas xerces-c intel-tbb-oneapi artdaq-core-mu2e artdaq-core trace gsl postgresql python geant4
+for PKGM in art art-root-io canvas cry curl kinkal messagefacility fhicl-cpp hep-concurrency sqlite cetlib cetlib-except nlohmann-json boost clhep root openblas xerces-c intel-tbb-oneapi intel-oneapi-tbb artdaq-core-mu2e artdaq-core trace gsl postgresql python geant4
 do
 
     PKG=$PKGM
@@ -158,7 +126,6 @@ do
     elif [ "$PKG" == "geant4" ]; then
         export G4INCLUDE=$DDD/include
         export G4LIB=$DDD/lib64
-        export GEANT4_VERSION=v4_11_1_p02b
         DDL=$G4LIB
     elif [ "$PKG" == "intel-tbb-oneapi" ]; then
         export TBB_INC=$DDD/include
@@ -216,11 +183,12 @@ do
 
 done
 
-export MUSE_ART=s128
-export ART_VERSION="v3_14_03"
+export MUSE_ART=s132
+export ART_VERSION="v3_15_00"
 # for muse status - will be fixed there
-export SETUP_ART="art v3_14_03"
-export KINKAL_VERSION="v03_01_05"
+export SETUP_ART="art v3_15_00"
+export KINKAL_VERSION="v03_05_02"
+export ARTDAQ_CORE_MU2E_VERSION="v9_04_00"
 
 # Manage the cross-stitched root versions for art suite v3_14_03
 # sl7/ups vs al9/spack.
@@ -228,14 +196,14 @@ export KINKAL_VERSION="v03_01_05"
 if [ "$MUSE_FLAVOR" == "sl7" ]; then
     export ROOT_VERSION="v6_28_10a"
 elif [ "$MUSE_FLAVOR" == "al9" ]; then
-    export ROOT_VERSION="v6_30_04"
+    export ROOT_VERSION="v6_38_00"
 fi
-export GEANT4_VERSION="v4_11_1_p02b"
-export SWIG_VERSION="v4_00_02"
-export FHICLCPP_VERSION="v4_18_03"
+export GEANT4_VERSION="v4_11_3_p02"
+export SWIG_VERSION="v4_01_01"
+export FHICLCPP_VERSION="v4_19_02"
 # in spack this points to a dir, and PYTHON_LIB is this string,
 # but in UPS it is backwards which swig uses. This can be fixed later.
-export PYTHON_LIBDIR=python3.9
+export PYTHON_LIBDIR=python3.12
 
 return
 fi

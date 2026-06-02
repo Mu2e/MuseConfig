@@ -1,0 +1,14 @@
+
+if [ "$MU2E_SPACK" ]; then
+
+   echo "would load spack python"
+
+else
+
+   if [ -z "$PYTHON_VERSION" ]; then
+      echo "ERROR - python not setup, please setup an Offline"
+      return
+   fi
+   setup pyana
+
+fi
