@@ -19,7 +19,7 @@ if [ "$MU2E_SPACK" ]; then
 
 else
 
-   setup -B ifdhc v2_7
+   setup -B ifdhc v2_7_2
    setup -B mu2egrid v8_03_02
    setup -B mu2efiletools v5_1
 
