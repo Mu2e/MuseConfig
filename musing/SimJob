@@ -65,6 +65,7 @@ MDC2025am Production/v02_07_00  mu2e-trig-config/v8_05_00   backing/Offline/v13_
 MDC2025an Production/v02_08_00  mu2e-trig-config/v8_06_00   backing/Offline/v13_11_00
 MDC2025ap Production/v02_09_00  mu2e-trig-config/v8_07_00   backing/Offline/v13_14_00
 MDC2025aq Production/v02_11_00  mu2e-trig-config/v8_07_00   backing/Offline/v13_18_00
+MDC2025ar Production/v02_11_00  mu2e-trig-config/v8_07_01   backing/Offline/v13_19_00
 Run1Baa Production/v02_01_03  mu2e-trig-config/v7_07_00   backing/Offline/v13_00_05
 Run1Bab Production/v02_01_03  mu2e-trig-config/v7_07_00   backing/Offline/v13_00_09
 Run1Bac Production/v02_01_04  mu2e-trig-config/v8_01_00   backing/Offline/v13_00_11
