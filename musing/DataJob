@@ -12,3 +12,4 @@
 1.9.0 PassN/v00_06_00 DQM/v1.4.0 Production/v02_17_00 mu2e-trig-config/v8_07_01 EventNtuple/v06_13_02 ArtAnalysis/v00_02_00 backing/Offline/v13_37_00
 1.10.0 PassN/v00_06_00 DQM/v1.4.0 Production/v02_17_00 mu2e-trig-config/v8_07_01 EventNtuple/v06_14_00 ArtAnalysis/v00_02_00 backing/Offline/v13_37_00
 1.11.0 PassN/v00_06_00 DQM/v2.1.0 Production/v02_19_00 mu2e-trig-config/v8_09_00 EventNtuple/v06_15_02 ArtAnalysis/v00_02_00 backing/Offline/v13_40_00
+1.12.0 PassN/v00_07_00 DQM/v2.1.2 Production/v02_22_00 mu2e-trig-config/v8_12_00 EventNtuple/v06_16_00 ArtAnalysis/v00_02_00 backing/Offline/v13_43_00
